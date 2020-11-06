@@ -77,30 +77,27 @@ class robot:
             One item in the returned list should be in the form: [landmark_index, dx, dy].
             '''
            
-        measurements = None
-        
-        ## TODO: iterate through all of the landmarks in a world
-        
-        ## TODO: For each landmark
-        ## 1. compute dx and dy, the distances between the robot and the landmark
-        ## 2. account for measurement noise by *adding* a noise component to dx and dy
-        ##    - The noise component should be a random value between [-1.0, 1.0)*measurement_noise
-        ##    - Feel free to use the function self.rand() to help calculate this noise component
-        ## 3. If either of the distances, dx or dy, fall outside of the internal var, measurement_range
-        ##    then we cannot record them; if they do fall in the range, then add them to the measurements list
-        ##    as list.append([index, dx, dy]), this format is important for data creation done later
-        
-        ## TODO: return the final, complete list of measurements
-        for i in range(len(self.landmarks)):
-            dx = self.landmarks[i][0] - self.x + self.rand() * self.measurement_noise
-            dy = self.landmarks[i][1] - self.y + self.rand() * self.measurement_noise
-            
-            d = sqrt(dx*dx + dy*dy)
-            # check whether it falls outside the measurement range and world 
-            if d > self.measurement_range and self.measurement_range != -1:
-                continue
-            measurements.append([i, dx, dy])
-            
+        ## 1111 all_landmarks_within_range = self.measurement_range == -1
+        measurements = []
+        for i, landmark in enumerate(self.landmarks):
+            dx = landmark[0] - self.x + self.rand() * self.measurement_noise
+            dy = landmark[1] - self.y + self.rand() * self.measurement_noise
+            if self.measurement_range == -1 or (abs(dx) <= self.measurement_range and abs(dy) <= self.measurement_range):
+                measurements.append([i, dx, dy])
+        # 11111
+        """        
+        for index, (landmark_x, landmark_y) in enumerate(self.landmarks):
+            dx = (landmark_x - self.x) + (self.rand() * self.measurement_noise)
+            dy = (landmark_y - self.y) + (self.rand() * self.measurement_noise)
+
+            is_landmark_within_range = (all_landmarks_within_range or
+                                        (abs(dx) <= self.measurement_range) and
+                                        (abs(dy) <= self.measurement_range))
+
+            if is_landmark_within_range:
+                measurements.append([index, dx, dy])
+        """
+
         return measurements
 
 
