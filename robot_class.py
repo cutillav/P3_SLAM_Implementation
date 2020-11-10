@@ -77,26 +77,15 @@ class robot:
             One item in the returned list should be in the form: [landmark_index, dx, dy].
             '''
            
-        ## 1111 all_landmarks_within_range = self.measurement_range == -1
+        ## initialize the measurements list
         measurements = []
+        ## go through the landmarks and calculate the distance from the robot´s position to each landmark, taking into account the noise
         for i, landmark in enumerate(self.landmarks):
             dx = landmark[0] - self.x + self.rand() * self.measurement_noise
             dy = landmark[1] - self.y + self.rand() * self.measurement_noise
+            ## if it is within the measurement range, add it to the measurements list
             if self.measurement_range == -1 or (abs(dx) <= self.measurement_range and abs(dy) <= self.measurement_range):
                 measurements.append([i, dx, dy])
-        # 11111
-        """        
-        for index, (landmark_x, landmark_y) in enumerate(self.landmarks):
-            dx = (landmark_x - self.x) + (self.rand() * self.measurement_noise)
-            dy = (landmark_y - self.y) + (self.rand() * self.measurement_noise)
-
-            is_landmark_within_range = (all_landmarks_within_range or
-                                        (abs(dx) <= self.measurement_range) and
-                                        (abs(dy) <= self.measurement_range))
-
-            if is_landmark_within_range:
-                measurements.append([index, dx, dy])
-        """
 
         return measurements
 
